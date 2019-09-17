@@ -2,12 +2,18 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 var integrationURL = "http://fd295619.ngrok.io"
+
+type Action struct {
+	Value string `json:"value"`
+}
+type Payload struct {
+	Actions []Action `json:"actions"`
+}
 
 func main() {
 	r := gin.Default()
@@ -33,15 +39,8 @@ func main() {
 			"attachments": []gin.H{
 				gin.H{
 					"fallback":    "This is a fallback for when things didn't work as expected :(",
-					"callback_id": "start_icebreaker",
-					"actions": []gin.H{
-						gin.H{
-							"name":  "start",
-							"text":  "Start Icebreaker",
-							"type":  "button",
-							"value": "start",
-						},
-					},
+					"callback_id": "icebreaker",
+					"actions":     startIcebreakerButton(),
 				},
 			},
 		})
@@ -51,12 +50,6 @@ func main() {
 		// fmt.Println(string(body))
 		payload := c.Request.FormValue("payload")
 
-		type Action struct {
-			value string `json:"value"`
-		}
-		type Payload struct {
-			actions []Action `json:"actions"`
-		}
 		var payloadStruct Payload
 		err := json.Unmarshal([]byte(payload), &payloadStruct)
 		if err != nil {
@@ -64,11 +57,20 @@ func main() {
 				"text": "The request failed :(",
 			})
 		}
+		if len(payloadStruct.Actions) != 1 {
+			c.JSON(404, gin.H{
+				"text": "The request failed, expected to receive 1 action :(",
+			})
+		}
+		if len(payloadStruct.Actions[0].Value) == 0 {
+			c.JSON(404, gin.H{
+				"text": "The request failed, expected the action to not be empty :(",
+			})
+		}
 
 		c.JSON(200, gin.H{
 			"response_type": "in_channel",
-			//"text":          "Gotcha! You clicked " + payloadStruct.actions[0].value,
-			"text": "Gotcha! You clicked " + fmt.Sprintf("%+v", payloadStruct),
+			"text":          "Gotcha! You clicked " + payloadStruct.Actions[0].Value,
 		})
 	})
 	r.Run() // listen and serve on 0.0.0.0:8080

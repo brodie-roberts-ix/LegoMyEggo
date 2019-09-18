@@ -20,7 +20,7 @@ func slashCommandHandler(c *gin.Context) {
 			gin.H{
 				"fallback":    "This is a fallback for when things didn't work as expected :(",
 				"callback_id": "icebreaker",
-				"actions":     startIcebreakerButton(),
+				"actions":     icebreakerButtons(),
 			},
 		},
 	})

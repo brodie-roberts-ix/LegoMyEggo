@@ -2,9 +2,10 @@ package main
 
 import "github.com/gin-gonic/gin"
 
-func startIcebreakerButton() []gin.H {
+func icebreakerButtons() []gin.H {
 	return []gin.H{
-		button("Start Icebreaker", "start"),
+		button("Start ice-breaker activity", "start"),
+		button("Cancel", "cancel"),
 	}
 }
 func button(text, value string) gin.H {

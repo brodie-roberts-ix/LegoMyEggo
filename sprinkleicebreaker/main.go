@@ -14,6 +14,7 @@ var (
 	botOAuthToken        = "" // Taken in from the first argument after the program name
 	channelGameState     = make(map[string]*leggo.Game)
 	sleepBeforeGameReply = 600 * time.Millisecond
+	gameFilePath         = "../leggo/stories/derp.json"
 )
 
 func main() {

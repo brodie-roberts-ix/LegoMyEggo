@@ -8,8 +8,8 @@ import (
 	"github.com/brodie-roberts-ix/LegoMyEggo/leggo"
 )
 
-func buildNewGame() (*leggo.Game, error) {
-	file, err := os.Open("../leggo/stories/derp.json")
+func buildNewGame(filePath string) (*leggo.Game, error) {
+	file, err := os.Open(filePath)
 	if err != nil {
 		return nil, err
 	}

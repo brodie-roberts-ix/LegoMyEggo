@@ -29,7 +29,7 @@ func actionsHandler(c *gin.Context) {
 		switch buttonValue {
 
 		case "Start escape room activity":
-			game, err := buildNewGame()
+			game, err := buildNewGame(gameFilePath)
 			if err != nil {
 				status200InChannelWithText(c, "Unable to create the escape room adventure :(")
 				return

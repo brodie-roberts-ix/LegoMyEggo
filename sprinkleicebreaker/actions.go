@@ -6,9 +6,13 @@ import (
 )
 
 func actionsHandler(c *gin.Context) {
-	// body, _ := ioutil.ReadAll(c.Request.Body)
-	// fmt.Println(string(body))
 	payload := c.Request.FormValue("payload")
+
+	channelID := gjson.Get(payload, "channel.id").String()
+	if len(channelID) == 0 {
+		status200InChannelWithText(c, "Error: unable to get the channel ID from the request")
+		return
+	}
 
 	actionType := gjson.Get(payload, "actions.0.type").String()
 
@@ -25,13 +29,8 @@ func actionsHandler(c *gin.Context) {
 		// 	return
 
 		case "start_escape_room":
-			// NOTE: This flow doesn't actually create 2 distinct messages in the Slack UI.
-			// status200InChannelWithText(c, "The adventure begins!")
-			// responseURL := gjson.Get(payload, "response_url").String()
-			// if len(responseURL) > 0 {
-			// 	go sendAdditionalMessageMultiSelect(responseURL, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
-			// }
-			status200InChannelWithTextAndMultiSelect(c, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
+			status200InChannelWithText(c, "The adventure begins!")
+			go postMessageMultiSelect(channelID, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
 			return
 
 		case "cancel":
@@ -51,8 +50,8 @@ func actionsHandler(c *gin.Context) {
 		case "option-1":
 			fallthrough
 		case "option-2":
-			message := "Your selected option: " + selectValue + "\nYou are still in the first room. What do you do?"
-			status200InChannelWithTextAndMultiSelect(c, message, iceBreakerSelectMenu())
+			status200InChannelWithText(c, "Your selected option: "+selectValue)
+			go postMessageMultiSelect(channelID, "You are still in the first room. What do you do?", iceBreakerSelectMenu())
 			return
 
 		case "option-3":

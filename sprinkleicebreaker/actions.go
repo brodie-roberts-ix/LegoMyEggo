@@ -19,6 +19,7 @@ func actionsHandler(c *gin.Context) {
 	switch actionType {
 
 	case "button":
+		buttonName := gjson.Get(payload, "actions.0.name").String()
 		buttonValue := gjson.Get(payload, "actions.0.value").String()
 
 		switch buttonValue {
@@ -33,7 +34,7 @@ func actionsHandler(c *gin.Context) {
 			return
 
 		case "start_debug_flow":
-			status200InChannelWithText(c, "You have selected \"Start Debug Flow\"")
+			status200WithSelection(c, buttonName)
 			go func() {
 				postMessageWithText(channelID, "The (debug) adventure begins!")
 				postMessageMultiSelect(channelID, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
@@ -50,6 +51,8 @@ func actionsHandler(c *gin.Context) {
 		}
 
 	case "select":
+		// NOTE: The friendly name of the value doesn't seem to be available :(
+		//selectName := gjson.Get(payload, "actions.0.selected_options.0.name").String()
 		selectValue := gjson.Get(payload, "actions.0.selected_options.0.value").String()
 
 		switch selectValue {
@@ -57,7 +60,7 @@ func actionsHandler(c *gin.Context) {
 		case "option-1":
 			fallthrough
 		case "option-2":
-			status200InChannelWithText(c, "You have selected \""+selectValue+"\"")
+			status200WithSelection(c, selectValue)
 			go func() {
 				postMessageWithText(channelID, "You are still in the first room.")
 				postMessageMultiSelect(channelID, "What do you do?", iceBreakerSelectMenu())
@@ -65,7 +68,7 @@ func actionsHandler(c *gin.Context) {
 			return
 
 		case "option-3":
-			status200InChannelWithText(c, "You have selected \""+selectValue+"\"")
+			status200WithSelection(c, selectValue)
 			go func() {
 				postMessageWithText(channelID, "You found the exit. Congratulations!")
 			}()

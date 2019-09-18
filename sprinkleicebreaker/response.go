@@ -12,7 +12,7 @@ import (
 
 var (
 	chatPostMessageURL = "https://slack.com/api/chat.postMessage"
-	botOAuthToken      = "xoxb-765348086295-766935288614-fzpgcS5TGf5zsFCYzrdwbqrX"
+	botOAuthToken      = "xoxb-765348086295-766935288614-rq1hvu1A3iOVIBCEidKGGDQQ"
 )
 
 func status200InChannelWithText(c *gin.Context, text string) {
@@ -22,6 +22,15 @@ func status200InChannelWithText(c *gin.Context, text string) {
 	})
 }
 
+func status200WithSelection(c *gin.Context, selection string) {
+	c.JSON(http.StatusOK, gin.H{
+		"response_type": "in_channel",
+		"text":          "You have selected \"" + selection + "\"",
+	})
+}
+
+// NOTE: Unused for now
+/*
 func status200InChannelWithTextAndMultiSelect(c *gin.Context, text string, actions []gin.H) {
 	c.JSON(http.StatusOK, gin.H{
 		"response_type":   "in_channel",
@@ -37,6 +46,7 @@ func status200InChannelWithTextAndMultiSelect(c *gin.Context, text string, actio
 		},
 	})
 }
+*/
 
 func postMessageWithText(channelID string, text string) {
 	queryParams := url.Values{}
@@ -91,7 +101,6 @@ func postMessageMultiSelect(channelID string, text string, actions []gin.H) {
 
 func iceBreakerButtons() []gin.H {
 	return []gin.H{
-		//button("Start traditional ice-breaker activity", "start_traditional_icebreaker"),
 		button("Start escape room activity", "start_escape_room"),
 		button("Start debug flow", "start_debug_flow"),
 		button("Cancel request", "cancel"),
@@ -99,7 +108,7 @@ func iceBreakerButtons() []gin.H {
 }
 func button(text, value string) gin.H {
 	return gin.H{
-		"name":  value,
+		"name":  text,
 		"text":  text,
 		"type":  "button",
 		"value": value,

@@ -10,11 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	chatPostMessageURL = "https://slack.com/api/chat.postMessage"
-	botOAuthToken      = "xoxb-765348086295-766935288614-QyaOiolqKT1Bgu8U1zehHBEQ"
-)
-
 func status200InChannelWithText(c *gin.Context, text string) {
 	c.JSON(http.StatusOK, gin.H{
 		"response_type": "in_channel",
@@ -116,20 +111,26 @@ func button(text string) gin.H {
 }
 
 func iceBreakerSelectMenu() []gin.H {
+	options := []string{"Option 1", "Option 2", "Option 3"}
+	return selectMenu(options)
+}
+
+func selectMenu(options []string) []gin.H {
+	optionsStruct := make([]gin.H, 0)
+	for _, opt := range options {
+		optionsStruct = append(optionsStruct, createOption(opt))
+	}
+
 	return []gin.H{
 		gin.H{
-			"name": "icebreaker_options",
-			"text": "Here are your options...",
-			"type": "select",
-			"options": []gin.H{
-				option("Option 1"),
-				option("Option 2"),
-				option("Option 3"),
-			},
+			"name":    "icebreaker_options",
+			"text":    "Here are your options...",
+			"type":    "select",
+			"options": optionsStruct,
 		},
 	}
 }
-func option(text string) gin.H {
+func createOption(text string) gin.H {
 	return gin.H{
 		"text":  text,
 		"value": text,

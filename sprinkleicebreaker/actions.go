@@ -28,20 +28,25 @@ func actionsHandler(c *gin.Context) {
 
 		switch buttonValue {
 
-		// NOTE: Abandoning idea of traditional ice breaker
-		// case "start_traditional_icebreaker":
-		// 	status200InChannelWithText(c, "Question: What is your favorite non-alcoholic beverage?")
-		// 	return
-
 		case "Start escape room activity":
-			status200InChannelWithText(c, "Not implemented yet")
+			game, err := buildNewGame()
+			if err != nil {
+				status200InChannelWithText(c, "Unable to create the escape room adventure :(")
+				return
+			}
+			channelGameState[channelID] = game
+
+			status200WithSelection(c, buttonName)
+
+			desc, actions := game.Display()
+			renderLeggoGameReply(c, channelID, desc, actions)
 			return
 
 		case "Start debug flow":
 			status200WithSelection(c, buttonName)
 			go func() {
-				postMessageWithText(channelID, "The (debug) adventure begins!")
-				postMessageMultiSelect(channelID, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
+				postMessageWithText(channelID, "The (debug) adventure begins! You have arrived in your first room.")
+				postMessageMultiSelect(channelID, "What do you do?", iceBreakerSelectMenu())
 			}()
 			return
 

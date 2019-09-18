@@ -9,7 +9,7 @@ import (
 
 var (
 	chatPostMessageURL   = "https://slack.com/api/chat.postMessage"
-	botOAuthToken        = "xoxb-765348086295-766935288614-YM0uoAzUma1uGkJvzIoegBL0"
+	botOAuthToken        = "xoxb-765348086295-766935288614-OrBoA3jbPqvJ3KXF6w904cw4"
 	channelGameState     = make(map[string]*leggo.Game)
 	sleepBeforeGameReply = 600 * time.Millisecond
 )

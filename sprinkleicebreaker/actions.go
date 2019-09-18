@@ -42,14 +42,6 @@ func actionsHandler(c *gin.Context) {
 			renderLeggoGameReply(channelID, desc, actions)
 			return
 
-		case "Start debug flow":
-			status200WithSelection(c, buttonName)
-			go func() {
-				postMessageWithText(channelID, "The (debug) adventure begins! You have arrived in your first room.")
-				postMessageMultiSelect(channelID, "What do you do?", iceBreakerSelectMenu())
-			}()
-			return
-
 		case "Cancel request":
 			status200InChannelWithText(c, "Game request cancelled.")
 			return

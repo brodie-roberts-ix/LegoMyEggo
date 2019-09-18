@@ -1,29 +1,25 @@
 {
 	"start_actions": ["look", "examine", "go"],
 	"actions": {
-		"look": [
-			{
-				"default": "You look around, but see nothing"
-			}, {
-				"error": "To look at something in particular, use 'examine $1'"
-			}
-		],
-		"examine": [
-			{
-				"error": "What do you want to examine? Use 'examine ...'"
-			}, {
-				"default": "You examine $1, but notice nothing"
-			}
-		],
-		"go": [
-			{
-				"error": "Where do you want to go? Use 'go ...'"
-			}, {
-				"default": "You can't go to $1"
-			}
-		]
+		"look": {
+			"type": "location",
+			"args": 0,
+			"default": "You look around, but see nothing",
+			"error": "To look at something in particular, use 'examine ...'"
+		},
+		"examine": {
+			"type": "object",
+			"args": 1,
+			"default": "You examine %s, but notice nothing",
+			"error": "What do you want to examine? Use 'examine ...'"
+		},
+		"go": {
+			"type": "object",
+			"args": 1,
+			"default": "You can't go to %s",
+			"error": "Where do you want to go? Use 'go ...'"
+		}
 	},
-	"bad_action": "Unknown action",
 	"start_location": "entrance hall",
 	"locations": {
 		"entrance hall": {
@@ -33,7 +29,7 @@
 				"table": {
 					"examine": {
 						"type": "ADD_OBJECT",
-						"add_object": "knife",
+						"arg": "knife",
 						"msg": "The table is full of snacks, and a small cheese knife."
 					}
 				},
@@ -56,7 +52,7 @@
 					},
 					"go": {
 						"type": "SET_LOCATION",
-						"set_location": "hack room"
+						"arg": "hack room"
 					}
 				}
 			}
@@ -78,7 +74,7 @@
 					},
 					"go": {
 						"type": "SET_LOCATION",
-						"set_location": "entrance hall"
+						"arg": "entrance hall"
 					}
 				}
 			}

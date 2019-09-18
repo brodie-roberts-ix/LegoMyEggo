@@ -1,0 +1,87 @@
+{
+	"start_actions": ["look", "examine", "go"],
+	"actions": {
+		"look": [
+			{
+				"default": "You look around, but see nothing"
+			}, {
+				"error": "To look at something in particular, use 'examine $1'"
+			}
+		],
+		"examine": [
+			{
+				"error": "What do you want to examine? Use 'examine ...'"
+			}, {
+				"default": "You examine $1, but notice nothing"
+			}
+		],
+		"go": [
+			{
+				"error": "Where do you want to go? Use 'go ...'"
+			}, {
+				"default": "You can't go to $1"
+			}
+		]
+	},
+	"bad_action": "Unknown action",
+	"start_location": "entrance hall",
+	"locations": {
+		"entrance hall": {
+			"desc": "You stand in the entrance hall of the IX Hackathon.\n\nThere is a snack table and a tired co-op.\n\nThe doors to the hack room are open.",
+			"start_objects": ["table", "co-op", "hack room"],
+			"objects": {
+				"table": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"add_object": "knife",
+						"msg": "The table is full of snacks, and a small cheese knife."
+					}
+				},
+				"knife": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The knife has blood on it..."
+					}
+				},
+				"co-op": {
+					"examine": {
+						"type": "MSG",
+						"msg": "This co-op is so tired that they don't realize they are bleeding!"
+					}
+				},
+				"hack room": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the hack room are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"set_location": "hack room"
+					}
+				}
+			}
+		},
+		"hack room": {
+			"desc": "You are in the hack room of the IX Hackathon.\n\nThe room is busy, but your station is empty. Where is your team?\n\nThere is a door back to the entrance hall.",
+			"start_objects": ["station", "entrance hall"],
+			"objects": {
+				"station": {
+					"examine": {
+						"type": "WIN",
+						"msg": "You win this unfinished game!"
+					}
+				},
+				"entrance hall": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the entrance hall are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"set_location": "entrance hall"
+					}
+				}
+			}
+		}
+	}
+}

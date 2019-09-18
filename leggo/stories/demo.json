@@ -1,0 +1,173 @@
+{
+	"start_actions": ["look", "examine", "go"],
+	"actions": {
+		"look": {
+			"type": "location",
+			"args": 0,
+			"default": "You look around, but see nothing",
+			"error": "To look at something in particular, use 'examine ...'"
+		},
+		"examine": {
+			"type": "object",
+			"args": 1,
+			"default": "You examine %s, but notice nothing",
+			"error": "What do you want to examine? Use 'examine ...'"
+		},
+		"go": {
+			"type": "object",
+			"args": 1,
+			"default": "You can't go to %s",
+			"error": "Where do you want to go? Use 'go ...'"
+		},
+		"heal": {
+			"type": "object",
+			"args": 1
+		},
+		"fix": {
+			"type": "object",
+			"args": 1
+		},
+		"phone": {
+			"type": "object",
+			"args": 1
+		},
+		"develop": {
+			"type": "object",
+			"args": 1
+		},
+		"test": {
+			"type": "object",
+			"args": 1
+		},
+		"demo": {
+			"type": "object",
+			"args": 1
+		}
+
+	},
+	"start_location": "foyer",
+	"locations": {
+		"foyer": {
+			"desc": "You stand in the Foyer of the IX Hackathon. What a well put together event!\n\nThere is a snack table in the middle of the room, and an elevator off to the side.\n\nThe doors to the hack room are open.",
+			"start_objects": ["table", "elevator", "hack room", "lisa"],
+			"objects": {
+				"table": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "knife",
+						"msg": "The table is full of snacks, and a small cheese knife."
+					}
+				},
+				"knife": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "blood",
+						"msg": "The knife has blood on it..."
+					}
+				},
+				"blood": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "co-op",
+						"msg": "You follow the trail of blood...to your team's co-op."
+					}
+				},
+				"co-op": {
+					"examine": {
+						"type": "MSG",
+						"msg": "This co-op is so tired that they don't realize they are bleeding!"
+					},
+					"heal": {
+						"type": "ADD_ACTION",
+						"arg": "test",
+						"msg": "Your co-op is revitalized! Is there any testing work to make them do?"
+					}
+				},
+				"elevator": {
+					"examine": {
+						"type": "ADD_ACTION",
+						"arg": "fix",
+						"msg": "This elevator seems to be broken... Maybe you can fix it?"
+					},
+					"fix": {
+						"type": "ADD_ACTION",
+						"arg": "develop",
+						"msg": "You get the doors open with the help of IT, and find Stabby Stanley. Your lead dev is free!"
+					}
+				},
+				"hack room": {
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "hack room"
+					}
+				},
+				"lisa": {
+					"phone": {
+						"type": "ADD_ACTION",
+						"arg": "demo",
+						"msg": "Lively Lisa got distracted, but she's on her way now. If anything needs to be presented, she's got it!"
+					}
+				}
+			}
+		},
+		"hack room": {
+			"desc": "You are in the Hack Room of the IX Hackathon.\n\nThe room is busy and your station awaits. Hopefully you have everything you need...\n\nThere is a door back to the entrance hall.",
+			"start_objects": ["room", "station", "foyer", "lisa"],
+			"objects": {
+				"room": {
+					"examine": {
+						"type": "ADD_ACTION",
+						"arg": "heal",
+						"msg": "You find a first aid kit by the door. Is anyone hurt?"
+					}
+				},
+				"station": {
+					"examine": {
+						"type": "ADD_ACTION",
+						"arg": "phone",
+						"msg": "You find a phone on your station. It has Lisa's number in it."
+					},
+					"develop": {
+						"type": "ADD_OBJECT",
+						"arg": "code",
+						"msg": "Stabby Stanley finishes the code before you know it. He's great with deadlines!"
+					}
+				},
+				"code": {
+					"examine": {
+						"type": "MSG",
+						"msg": "Does this code even work?"
+					},
+					"test": {
+						"type": "ADD_OBJECT",
+						"arg": "product",
+						"msg": "Your co-op tests the code - everything's working great!"
+					}
+				},
+				"product": {
+					"examine": {
+						"type": "MSG",
+						"msg": "All ready to show off!"
+					},
+					"demo": {
+						"type": "WIN",
+						"msg": "Lively Lisa gives the demo of a lifetime!\n\n*You win!*"
+					}
+				},
+				"foyer": {
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "foyer"
+					}
+				},
+				"lisa": {
+					"phone": {
+						"type": "ADD_ACTION",
+						"arg": "demo",
+						"msg": "Lively Lisa got distracted, but she's on her way now. If anything needs to be presented, she's got it!"
+					}
+				}
+			}
+		}
+	}
+}

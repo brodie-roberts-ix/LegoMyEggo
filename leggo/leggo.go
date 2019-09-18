@@ -30,15 +30,13 @@ func (g *Game) Display() (desc string, actions []string) {
 }
 
 func (g *Game) Act(command string) (msg string, actions []string) {
-	parts := strings.Split(command, " ")
-	action := parts[0]
-	args := parts[1:]
+	parts := strings.SplitN(command, " ", 2)
 
-	switch len(args) {
-	case 0:
-		msg = g.ActZero(action)
+	switch len(parts) {
 	case 1:
-		msg = g.ActOne(action, args[0])
+		msg = g.ActZero(parts[0])
+	case 2:
+		msg = g.ActOne(parts[0], parts[1])
 	default:
 		msg = fmt.Sprintf("Invalid command: %s", command)
 	}
@@ -122,7 +120,9 @@ func (g *Game) getActions() (actions []string) {
 	for _, obj := range loc.ActiveObjects {
 		for _, act := range g.ActiveActions {
 			if g.Actions[act].Args == 1 && g.Actions[act].Type == "object" {
-				actions = append(actions, act+" "+obj)
+				if _, ok := loc.Objects[obj][act]; ok {
+					actions = append(actions, act+" "+obj)
+				}
 			}
 		}
 	}

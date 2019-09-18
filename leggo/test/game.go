@@ -1,30 +1,41 @@
 package main
 
 import (
-	"encoding/json"
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"leggo"
 	"os"
+	"strings"
 )
 
 func main() {
-	f, err := os.Open("../stories/derp.json")
+	file, err := os.Open("../stories/derp.json")
 	tableflip(err)
-	data, err := ioutil.ReadAll(f)
+	data, err := ioutil.ReadAll(file)
 	tableflip(err)
-	//fmt.Printf("%s\n", data)
 
-	var game leggo.Game
-	tableflip(json.Unmarshal(data, &game))
+	game, err := leggo.NewFromJson(data)
+	tableflip(err)
 
-	fmt.Println(game)
-	fmt.Println(game.Locations[game.ActiveLocation])
-	fmt.Println(game.Locations[game.ActiveLocation].
-		Objects["table"]["examine"])
+	var msg string
+	var actions []string
+	msg, actions = game.Display()
+	fmt.Println(msg)
+	fmt.Println("Actions: {", strings.Join(actions, " | "), "}")
 
-	fmt.Println(game.Act("look"))
-	fmt.Println(game.Act("examine table"))
+	scanner := bufio.NewScanner(os.Stdin)
+	for !game.HaveWon() {
+		fmt.Print("> ")
+		if !scanner.Scan() {
+			break
+		}
+		msg, actions = game.Act(scanner.Text())
+		fmt.Println(msg)
+		fmt.Println("Actions: {", strings.Join(actions, " | "), "}")
+	}
+	tableflip(scanner.Err())
+	fmt.Println("VICTORY!!!")
 }
 
 func tableflip(err error) {

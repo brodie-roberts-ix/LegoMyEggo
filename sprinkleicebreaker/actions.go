@@ -19,11 +19,18 @@ func actionsHandler(c *gin.Context) {
 
 		switch buttonValue {
 
+		// NOTE: Abandoning idea of traditional ice breaker
 		// case "start_traditional_icebreaker":
 		// 	status200InChannelWithText(c, "Question: What is your favorite non-alcoholic beverage?")
 		// 	return
 
 		case "start_escape_room":
+			// NOTE: This flow doesn't actually create 2 distinct messages in the Slack UI.
+			// status200InChannelWithText(c, "The adventure begins!")
+			// responseURL := gjson.Get(payload, "response_url").String()
+			// if len(responseURL) > 0 {
+			// 	go sendAdditionalMessageMultiSelect(responseURL, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
+			// }
 			status200InChannelWithTextAndMultiSelect(c, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
 			return
 

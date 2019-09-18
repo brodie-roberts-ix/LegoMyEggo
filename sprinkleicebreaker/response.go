@@ -2,10 +2,34 @@ package main
 
 import "github.com/gin-gonic/gin"
 
-func icebreakerButtons() []gin.H {
+func status200InChannelWithText(c *gin.Context, text string) {
+	c.JSON(200, gin.H{
+		"response_type": "in_channel",
+		"text":          text,
+	})
+}
+
+func status200InChannelWithTextAndMultiSelect(c *gin.Context, text string, actions []gin.H) {
+	c.JSON(200, gin.H{
+		"response_type":   "in_channel",
+		"text":            text,
+		"attachment_type": "default",
+		"attachments": []gin.H{
+			gin.H{
+				"fallback":    "This is a fallback for when things didn't work as expected :(",
+				"callback_id": "icebreaker",
+				"type":        "static_select",
+				"actions":     actions,
+			},
+		},
+	})
+}
+
+func iceBreakerButtons() []gin.H {
 	return []gin.H{
-		button("Start ice-breaker activity", "start"),
-		button("Cancel", "cancel"),
+		//button("Start traditional ice-breaker activity", "start_traditional_icebreaker"),
+		button("Start escape room activity", "start_escape_room"),
+		button("Cancel request", "cancel"),
 	}
 }
 func button(text, value string) gin.H {

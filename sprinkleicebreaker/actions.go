@@ -10,93 +10,55 @@ func actionsHandler(c *gin.Context) {
 	// fmt.Println(string(body))
 	payload := c.Request.FormValue("payload")
 
-	// var payloadStruct Payload
-	// err := json.Unmarshal([]byte(payload), &payloadStruct)
-	// if err != nil {
-	// 	c.JSON(200, gin.H{
-	// 		"text": "The request failed :(",
-	// 	})
-	// 	return
-	// }
-	// if len(payloadStruct.Actions) != 1 {
-	// 	c.JSON(200, gin.H{
-	// 		"text": "The request failed, expected to receive 1 action :(",
-	// 	})
-	// 	return
-	// }
-	// if len(payloadStruct.Actions[0].Value) == 0 {
-	// 	fmt.Println(payload)
-	// 	c.JSON(200, gin.H{
-	// 		"text": "The request failed, expected the action to not be empty :(",
-	// 	})
-	// 	return
-	// }
-	actionType := gjson.Get(payload, "actions.0.type")
-	if !actionType.Exists() {
-		c.JSON(200, gin.H{
-			"response_type": "in_channel",
-			"text":          "The request failed parsing the action type :(",
-		})
-		return
-	}
+	actionType := gjson.Get(payload, "actions.0.type").String()
 
-	switch actionType.String() {
+	switch actionType {
 
 	case "button":
-		buttonValue := gjson.Get(payload, "actions.0.value")
-		if !buttonValue.Exists() {
-			c.JSON(200, gin.H{
-				"response_type": "in_channel",
-				"text":          "The request failed parsing the value :(",
-			})
-			return
-		}
+		buttonValue := gjson.Get(payload, "actions.0.value").String()
 
-		switch buttonValue.String() {
+		switch buttonValue {
 
-		case "start":
-			c.JSON(200, gin.H{
-				"response_type":   "in_channel",
-				"text":            "Welcome!",
-				"attachment_type": "default",
-				"attachments": []gin.H{
-					gin.H{
-						"fallback":    "This is a fallback for when things didn't work as expected :(",
-						"callback_id": "icebreaker",
-						"type":        "static_select",
-						"actions":     iceBreakerSelectMenu(),
-					},
-				},
-			})
+		// case "start_traditional_icebreaker":
+		// 	status200InChannelWithText(c, "Question: What is your favorite non-alcoholic beverage?")
+		// 	return
+
+		case "start_escape_room":
+			status200InChannelWithTextAndMultiSelect(c, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
 			return
 
 		case "cancel":
-			c.JSON(200, gin.H{
-				"response_type": "in_channel",
-				"text":          "Game request cancelled.",
-			})
+			status200InChannelWithText(c, "Game request cancelled.")
+			return
+
+		default:
+			status200InChannelWithText(c, "The request failed parsing the button value :(")
 			return
 		}
 
 	case "select":
-		selectValue := gjson.Get(payload, "actions.0.selected_options.0.value")
-		if !selectValue.Exists() {
-			c.JSON(200, gin.H{
-				"response_type": "in_channel",
-				"text":          "The request failed parsing the value :(",
-			})
+		selectValue := gjson.Get(payload, "actions.0.selected_options.0.value").String()
+
+		switch selectValue {
+
+		case "option-1":
+			fallthrough
+		case "option-2":
+			message := "Your selected option: " + selectValue + "\nYou are still in the first room. What do you do?"
+			status200InChannelWithTextAndMultiSelect(c, message, iceBreakerSelectMenu())
+			return
+
+		case "option-3":
+			status200InChannelWithText(c, "You found the exit. Congratulations!")
+			return
+
+		default:
+			status200InChannelWithText(c, "The request failed parsing the select value :(")
 			return
 		}
 
-		c.JSON(200, gin.H{
-			"response_type": "in_channel",
-			"text":          "Your selected option: " + selectValue.String(),
-		})
+	default:
+		status200InChannelWithText(c, "The request failed parsing the action type :(")
+		return
 	}
-
-	c.JSON(200, gin.H{
-		"response_type": "in_channel",
-		"text":          "The request couldn't figure out what to do next :(",
-	})
-	return
 }

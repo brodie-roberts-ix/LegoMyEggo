@@ -96,8 +96,8 @@ func postMessageMultiSelect(channelID string, text string, actions []gin.H) {
 
 func iceBreakerButtons() []gin.H {
 	return []gin.H{
-		button("Start escape room activity"),
-		button("Cancel request"),
+		button("Let's go!"),
+		button("Not yet."),
 	}
 }
 func button(text string) gin.H {

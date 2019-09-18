@@ -28,7 +28,7 @@ func actionsHandler(c *gin.Context) {
 
 		switch buttonValue {
 
-		case "Start escape room activity":
+		case "Let's go!":
 			game, err := buildNewGame(gameFilePath)
 			if err != nil {
 				status200InChannelWithText(c, "Unable to create the escape room adventure :(")
@@ -42,8 +42,8 @@ func actionsHandler(c *gin.Context) {
 			renderLeggoGameReply(channelID, desc, actions)
 			return
 
-		case "Cancel request":
-			status200InChannelWithText(c, "Game request cancelled.")
+		case "Not yet.":
+			status200InChannelWithText(c, "Come back when you're ready :smile:")
 			return
 
 		default:

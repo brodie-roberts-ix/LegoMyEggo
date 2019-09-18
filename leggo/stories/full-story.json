@@ -1,0 +1,183 @@
+{
+	"start_actions": ["look_around", "examine", "go_to", "ask"],
+	"actions": {
+		"look_around": {
+			"type": "location",
+			"args": 0,
+			"default": "You look around, but see nothing",
+			"error": "To look at something in particular, use 'examine ...'"
+		},
+		"examine": {
+			"type": "object",
+			"args": 1,
+			"default": "You examine %s, but notice nothing",
+			"error": "What do you want to examine? Use 'examine ...'"
+		},
+		"go_to": {
+			"type": "object",
+			"args": 1,
+			"default": "You can't go to %s",
+			"error": "Where do you want to go? Use 'go ...'"
+		},
+		"ask": {
+			"type": "object",
+			"args": 1,
+			"default": "You can't ask %s",
+			"error": "What do you want to know? Say 'ask ...'"
+		}
+	},
+	"start_location": "hotel",
+	"locations": {
+        "hotel": {
+			"desc": "\nYou stand in the entrance hall of the hotel. What a fancy place; hats off to whoever booked it!\n\nYou see a sign that says 'Convention Centre' but are distracted by a message you just received from the team Slack channel.\n\n\n",
+			"start_objects": ["message", "elevator", "foyer"],
+			"objects": {
+				"message": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "message",
+						"msg": "\nFalse alarm; it wasn't your Slack channel but your phone calendar reminding you of the hackathon.\n\nYour teammates Hungry Henry, Lively Lisa, Lounging Larry and Sleepy Sam haven't sent any messages since yesterday.\n\n\n"
+					}
+				},
+				"hotel concierge": {
+					"ask": {
+						"type": "MSG",
+						"msg": "The knife has blood on it..."
+					}
+				},
+				"elevator": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The elevator seems to be broken."
+					},
+					"go_to": {
+						"type": "MSG",
+						"msg": "That's weird, your teammate Stabby Stan is sleeping inside the elevator. Silly Stan; looks like he's had too much red wine!"
+					}
+				},
+				"foyer": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the foyer are open."
+					},
+					"go_to": {
+						"type": "SET_LOCATION",
+						"arg": "hack room"
+					}
+				}
+			}
+		},
+		"elevator": {
+			"desc": "You're in tjhe elevator.\n\nThere are many people milling around and you can see more in the adjacent rooms; one says 'hack room', one says 'hotel', and one says 'dining room'.\n\nThere is a table with something on it in the middle of the foyer.",
+			"start_objects": ["table", "co-op", "hack room"],
+			"objects": {
+				"Stanley": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "knife",
+						"msg": "The table is full of snacks, and a small cheese knife."
+					}
+				},
+				"hotel": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the hotel are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "hack room"
+					}
+				}
+			}
+		},
+		"entrance hall": {
+			"desc": "You stand in the entrance hall of the IX Hackathon.\n\nThere are many people milling around and you can see more in the adjacent rooms; one says 'hack room', one says 'hotel', and one says 'dining room'.\n\nThere is a table with something on it in the middle of the foyer.",
+			"start_objects": ["table", "co-op", "hack room"],
+			"objects": {
+				"table": {
+					"examine": {
+						"type": "ADD_OBJECT",
+						"arg": "knife",
+						"msg": "The table is full of snacks, and a small cheese knife."
+					}
+				},
+				"knife": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The knife has blood on it..."
+					}
+				},
+				"co-op": {
+					"examine": {
+						"type": "MSG",
+						"msg": "This co-op is so tired that they don't realize they are bleeding!"
+					}
+				},
+				"hack room": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the hack room are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "hack room"
+					}
+				}
+			}
+		},
+		"hack room": {
+			"desc": "You are in the hack room of the IX Hackathon.\n\nThe room is busy, but your station is empty. Where is your team?\n\nThere is a door back to the entrance hall.",
+			"start_objects": ["station", "entrance hall"],
+			"objects": {
+				"station": {
+					"examine": {
+						"type": "WIN",
+						"msg": "You win this unfinished game!"
+					}
+				},
+				"entrance hall": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the entrance hall are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "entrance hall"
+					}
+				}
+			}
+		},
+		"LCBO": {
+			"desc": "You are in the hack room of the IX Hackathon.\n\nThe room is busy, but your station is empty. Where is your team?\n\nThere is a door back to the entrance hall.",
+			"start_objects": ["station", "entrance hall"],
+			"objects": {
+				"station": {
+					"examine": {
+						"type": "WIN",
+						"msg": "You win this unfinished game!"
+					}
+				},
+				"hotel": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the entrance hall are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "entrance hall"
+					}
+                },
+                "foyer": {
+					"examine": {
+						"type": "MSG",
+						"msg": "The doors to the entrance hall are open."
+					},
+					"go": {
+						"type": "SET_LOCATION",
+						"arg": "entrance hall"
+					}
+				}
+			}
+		}
+	}
+}

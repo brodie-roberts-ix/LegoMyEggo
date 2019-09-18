@@ -4,9 +4,10 @@ import (
 	"bufio"
 	"fmt"
 	"io/ioutil"
-	"leggo"
 	"os"
 	"strings"
+
+	"github.com/brodie-roberts-ix/LegoMyEggo/leggo"
 )
 
 func main() {

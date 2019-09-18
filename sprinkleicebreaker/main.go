@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"time"
 
 	"github.com/brodie-roberts-ix/LegoMyEggo/leggo"
@@ -9,12 +11,24 @@ import (
 
 var (
 	chatPostMessageURL   = "https://slack.com/api/chat.postMessage"
-	botOAuthToken        = "xoxb-765348086295-766935288614-OrBoA3jbPqvJ3KXF6w904cw4"
+	botOAuthToken        = "" // Taken in from the first argument after the program name
 	channelGameState     = make(map[string]*leggo.Game)
 	sleepBeforeGameReply = 600 * time.Millisecond
 )
 
 func main() {
+	flag.Parse()
+	if flag.NArg() != 1 {
+		fmt.Println("Please pass in the app bot's OAuth token.")
+		return
+	}
+
+	botOAuthToken = flag.Arg(0)
+	if len(botOAuthToken) == 0 {
+		fmt.Println("There was a problem handling the bot's OAuth token.")
+		return
+	}
+
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{

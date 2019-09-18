@@ -1,6 +1,5 @@
 Build and expose endpoints on port 8080
 
 ```
-go build
-./sprinkleicebreaker
+go run *.go $(cat oauth_credentials.txt)
 ```

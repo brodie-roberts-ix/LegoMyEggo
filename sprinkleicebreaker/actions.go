@@ -29,8 +29,15 @@ func actionsHandler(c *gin.Context) {
 		// 	return
 
 		case "start_escape_room":
-			status200InChannelWithText(c, "The adventure begins!")
-			go postMessageMultiSelect(channelID, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
+			status200InChannelWithText(c, "Not implemented yet")
+			return
+
+		case "start_debug_flow":
+			status200InChannelWithText(c, "You have selected \"Start Debug Flow\"")
+			go func() {
+				postMessageWithText(channelID, "The (debug) adventure begins!")
+				postMessageMultiSelect(channelID, "You have arrived in your first room. What do you do?", iceBreakerSelectMenu())
+			}()
 			return
 
 		case "cancel":
@@ -50,12 +57,18 @@ func actionsHandler(c *gin.Context) {
 		case "option-1":
 			fallthrough
 		case "option-2":
-			status200InChannelWithText(c, "Your selected option: "+selectValue)
-			go postMessageMultiSelect(channelID, "You are still in the first room. What do you do?", iceBreakerSelectMenu())
+			status200InChannelWithText(c, "You have selected \""+selectValue+"\"")
+			go func() {
+				postMessageWithText(channelID, "You are still in the first room.")
+				postMessageMultiSelect(channelID, "What do you do?", iceBreakerSelectMenu())
+			}()
 			return
 
 		case "option-3":
-			status200InChannelWithText(c, "You found the exit. Congratulations!")
+			status200InChannelWithText(c, "You have selected \""+selectValue+"\"")
+			go func() {
+				postMessageWithText(channelID, "You found the exit. Congratulations!")
+			}()
 			return
 
 		default:

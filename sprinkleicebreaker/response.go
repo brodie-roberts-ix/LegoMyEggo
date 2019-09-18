@@ -12,7 +12,7 @@ import (
 
 var (
 	chatPostMessageURL = "https://slack.com/api/chat.postMessage"
-	botOAuthToken      = "xoxb-765348086295-766935288614-x992BfmLUQN50t5pWIJYYhH8"
+	botOAuthToken      = "xoxb-765348086295-766935288614-fzpgcS5TGf5zsFCYzrdwbqrX"
 )
 
 func status200InChannelWithText(c *gin.Context, text string) {
@@ -93,6 +93,7 @@ func iceBreakerButtons() []gin.H {
 	return []gin.H{
 		//button("Start traditional ice-breaker activity", "start_traditional_icebreaker"),
 		button("Start escape room activity", "start_escape_room"),
+		button("Start debug flow", "start_debug_flow"),
 		button("Cancel request", "cancel"),
 	}
 }

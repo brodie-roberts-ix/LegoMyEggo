@@ -12,7 +12,7 @@ import (
 
 var (
 	chatPostMessageURL = "https://slack.com/api/chat.postMessage"
-	botOAuthToken      = "xoxb-765348086295-766935288614-rq1hvu1A3iOVIBCEidKGGDQQ"
+	botOAuthToken      = "xoxb-765348086295-766935288614-QyaOiolqKT1Bgu8U1zehHBEQ"
 )
 
 func status200InChannelWithText(c *gin.Context, text string) {
@@ -101,17 +101,17 @@ func postMessageMultiSelect(channelID string, text string, actions []gin.H) {
 
 func iceBreakerButtons() []gin.H {
 	return []gin.H{
-		button("Start escape room activity", "start_escape_room"),
-		button("Start debug flow", "start_debug_flow"),
-		button("Cancel request", "cancel"),
+		button("Start escape room activity"),
+		button("Start debug flow"),
+		button("Cancel request"),
 	}
 }
-func button(text, value string) gin.H {
+func button(text string) gin.H {
 	return gin.H{
 		"name":  text,
 		"text":  text,
 		"type":  "button",
-		"value": value,
+		"value": text,
 	}
 }
 
@@ -122,16 +122,16 @@ func iceBreakerSelectMenu() []gin.H {
 			"text": "Here are your options...",
 			"type": "select",
 			"options": []gin.H{
-				option("Option 1", "option-1"),
-				option("Option 2", "option-2"),
-				option("Option 3", "option-3"),
+				option("Option 1"),
+				option("Option 2"),
+				option("Option 3"),
 			},
 		},
 	}
 }
-func option(text, value string) gin.H {
+func option(text string) gin.H {
 	return gin.H{
 		"text":  text,
-		"value": value,
+		"value": text,
 	}
 }

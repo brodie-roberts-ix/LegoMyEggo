@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
 )
@@ -13,6 +15,8 @@ func actionsHandler(c *gin.Context) {
 		status200InChannelWithText(c, "Error: unable to get the channel ID from the request")
 		return
 	}
+
+	fmt.Println(gjson.Get(payload, "actions.0").String())
 
 	actionType := gjson.Get(payload, "actions.0.type").String()
 
@@ -29,11 +33,11 @@ func actionsHandler(c *gin.Context) {
 		// 	status200InChannelWithText(c, "Question: What is your favorite non-alcoholic beverage?")
 		// 	return
 
-		case "start_escape_room":
+		case "Start escape room activity":
 			status200InChannelWithText(c, "Not implemented yet")
 			return
 
-		case "start_debug_flow":
+		case "Start debug flow":
 			status200WithSelection(c, buttonName)
 			go func() {
 				postMessageWithText(channelID, "The (debug) adventure begins!")
@@ -41,7 +45,7 @@ func actionsHandler(c *gin.Context) {
 			}()
 			return
 
-		case "cancel":
+		case "Cancel request":
 			status200InChannelWithText(c, "Game request cancelled.")
 			return
 
@@ -51,15 +55,13 @@ func actionsHandler(c *gin.Context) {
 		}
 
 	case "select":
-		// NOTE: The friendly name of the value doesn't seem to be available :(
-		//selectName := gjson.Get(payload, "actions.0.selected_options.0.name").String()
 		selectValue := gjson.Get(payload, "actions.0.selected_options.0.value").String()
 
 		switch selectValue {
 
-		case "option-1":
+		case "Option 1":
 			fallthrough
-		case "option-2":
+		case "Option 2":
 			status200WithSelection(c, selectValue)
 			go func() {
 				postMessageWithText(channelID, "You are still in the first room.")
@@ -67,7 +69,7 @@ func actionsHandler(c *gin.Context) {
 			}()
 			return
 
-		case "option-3":
+		case "Option 3":
 			status200WithSelection(c, selectValue)
 			go func() {
 				postMessageWithText(channelID, "You found the exit. Congratulations!")

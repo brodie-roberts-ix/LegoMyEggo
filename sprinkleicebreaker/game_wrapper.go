@@ -3,8 +3,7 @@ package main
 import (
 	"io/ioutil"
 	"os"
-
-	"github.com/gin-gonic/gin"
+	"time"
 
 	"github.com/brodie-roberts-ix/LegoMyEggo/leggo"
 )
@@ -25,8 +24,16 @@ func buildNewGame() (*leggo.Game, error) {
 	return game, nil
 }
 
-func renderLeggoGameReply(c *gin.Context, channelID, message string, actions []string) {
+func renderLeggoGameMessage(channelID, message string) {
 	go func() {
+		time.Sleep(sleepBeforeGameReply)
+		postMessageWithText(channelID, message)
+	}()
+}
+
+func renderLeggoGameReply(channelID, message string, actions []string) {
+	go func() {
+		time.Sleep(sleepBeforeGameReply)
 		postMessageWithText(channelID, message)
 		postMessageMultiSelect(channelID, "What do you do?", selectMenu(actions))
 	}()

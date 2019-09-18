@@ -1,14 +1,17 @@
 package main
 
 import (
+	"time"
+
 	"github.com/brodie-roberts-ix/LegoMyEggo/leggo"
 	"github.com/gin-gonic/gin"
 )
 
 var (
-	chatPostMessageURL = "https://slack.com/api/chat.postMessage"
-	botOAuthToken      = "xoxb-765348086295-766935288614-ZCwEb21oc3HsKBbAY1AGmZIE"
-	channelGameState   = make(map[string]*leggo.Game)
+	chatPostMessageURL   = "https://slack.com/api/chat.postMessage"
+	botOAuthToken        = "xoxb-765348086295-766935288614-YM0uoAzUma1uGkJvzIoegBL0"
+	channelGameState     = make(map[string]*leggo.Game)
+	sleepBeforeGameReply = 600 * time.Millisecond
 )
 
 func main() {

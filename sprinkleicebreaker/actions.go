@@ -39,7 +39,7 @@ func actionsHandler(c *gin.Context) {
 			status200WithSelection(c, buttonName)
 
 			desc, actions := game.Display()
-			renderLeggoGameReply(c, channelID, desc, actions)
+			renderLeggoGameReply(channelID, desc, actions)
 			return
 
 		case "Start debug flow":
@@ -60,31 +60,23 @@ func actionsHandler(c *gin.Context) {
 		}
 
 	case "select":
-		selectValue := gjson.Get(payload, "actions.0.selected_options.0.value").String()
+		userText := gjson.Get(payload, "actions.0.selected_options.0.value").String()
 
-		switch selectValue {
-
-		case "Option 1":
-			fallthrough
-		case "Option 2":
-			status200WithSelection(c, selectValue)
-			go func() {
-				postMessageWithText(channelID, "You are still in the first room.")
-				postMessageMultiSelect(channelID, "What do you do?", iceBreakerSelectMenu())
-			}()
-			return
-
-		case "Option 3":
-			status200WithSelection(c, selectValue)
-			go func() {
-				postMessageWithText(channelID, "You found the exit. Congratulations!")
-			}()
-			return
-
-		default:
-			status200InChannelWithText(c, "The request failed parsing the select value :(")
+		game, ok := channelGameState[channelID]
+		if !ok {
+			status200InChannelWithText(c, "Unable to obtain the escape room state :(")
 			return
 		}
+
+		status200WithSelection(c, userText)
+
+		msg, actions := game.Act(userText)
+		if game.HaveWon() {
+			delete(channelGameState, channelID)
+			renderLeggoGameMessage(channelID, msg)
+			return
+		}
+		renderLeggoGameReply(channelID, msg, actions)
 
 	default:
 		status200InChannelWithText(c, "The request failed parsing the action type :(")

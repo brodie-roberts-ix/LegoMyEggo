@@ -20,7 +20,7 @@ func status200InChannelWithText(c *gin.Context, text string) {
 func status200WithSelection(c *gin.Context, selection string) {
 	c.JSON(http.StatusOK, gin.H{
 		"response_type": "in_channel",
-		"text":          "You have selected \"" + selection + "\"",
+		"text":          "> You have selected: *" + selection + "*",
 	})
 }
 
